@@ -5,7 +5,7 @@ import links from "@/lib/link";
 import {User} from '@/app/(main)/layout/libs/typeuser'
 export function useGetUser() {
   return useQuery<UsergetPayload>({
-    queryKey: ["user"], // key để cache
+    queryKey: ["user"],
     queryFn: async () => {
      const user = JSON.parse(localStorage.getItem("user") || "null") as User | null;
 
