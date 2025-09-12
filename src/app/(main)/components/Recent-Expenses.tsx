@@ -51,8 +51,8 @@ export default function RecentExpenses() {
               <tbody className="[&_tr:last-child]:border-0">
                 {data?.data.map((item) => (
                   <Itemcard
-                    key={item.id}
-                    id={item.id}
+                    key={item._id}
+                    _id={item._id}
                     title={item.title}
                     amount={item.amount}
                     categoryId={item.categoryId}
@@ -71,7 +71,7 @@ export default function RecentExpenses() {
 }
 
 const Itemcard = ({
-  id,
+  _id,
   title,
   amount,
   categoryId,
@@ -79,10 +79,12 @@ const Itemcard = ({
   createdAt,
   updatedAt,
 }: Expense) => {
+  console.log('id2',_id)
   const { mutate: deleteExpense, isPending } = useDeleteExpense();
-  const handleDelete = (id: string) => {
+  const handleDelete = (_id: string) => {
+    console.log("id",_id)
     if (confirm("Bạn có chắc muốn xóa?")) {
-      deleteExpense(id);
+      deleteExpense(_id);
     }
   };
   return (
@@ -108,7 +110,7 @@ const Itemcard = ({
           </button>
           <button
             disabled={isPending}
-            onClick={() => handleDelete(id)}
+            onClick={() => handleDelete(_id)}
             className="inline-flex h-9 items-center justify-center rounded-md px-3 text-sm font-medium 
                         hover:bg-accent hover:text-accent-foreground"
           >
