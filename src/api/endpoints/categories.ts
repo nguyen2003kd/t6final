@@ -1,9 +1,9 @@
-'use client' // bắt buộc nếu muốn log trên trình duyệt
+'use client' 
 
 import { useQuery } from '@tanstack/react-query'
 import Axios from 'axios'
 import { CategoryResponse } from '../types/category'
-import links from '@/lib/link'
+// import links from '@/lib/link'
 
 export function useCategories(page: number = 1) {
   return useQuery<CategoryResponse>({
