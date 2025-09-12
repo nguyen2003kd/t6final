@@ -25,7 +25,6 @@ export default function RecentExpenses() {
         </button>
       </div>
 
-      {/* Table */}
       <div className="p-6 pt-0">
         <div className="overflow-x-auto">
           <div className="relative w-full overflow-auto">

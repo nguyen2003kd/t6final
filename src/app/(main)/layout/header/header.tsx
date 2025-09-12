@@ -25,7 +25,6 @@ export default function Header() {
 
   const handleSignOut = () => {
     localStorage.removeItem("user");
-    localStorage.removeItem("userToken"); // nếu bạn lưu token
     router.push("/auth/login");
   };
 

@@ -1,4 +1,4 @@
-// Thể loại
+
 export interface Category {
   _id: string
   name: string
@@ -6,8 +6,6 @@ export interface Category {
   createdAt: string
   updatedAt: string
 }
-
-// Phân trang
 export interface Pagination {
   currentPage: number
   totalPages: number
@@ -17,7 +15,6 @@ export interface Pagination {
   limit: number
 }
 
-// Response API
 export interface CategoryResponse {
   success: boolean
   message: string

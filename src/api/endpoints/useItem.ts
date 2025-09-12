@@ -20,7 +20,7 @@ export const useExpenses = (page: number = 1, limit: number = 10) => {
           },
         }
       );
-      return res.data; // res.data là ExpenseRespont
+      return res.data; 
     },
     staleTime: 1000 * 60,
   });
