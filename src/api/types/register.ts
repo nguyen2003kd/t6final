@@ -1,4 +1,4 @@
-import { date } from "./../../../node_modules/zod/src/v4/core/regexes";
+
 export interface RegisterPayload {
   name: string;
   email: string;
