@@ -1,24 +1,27 @@
-'use client'
-import { useCategories } from '@/api/endpoints/categories'
-export default function Home() {
-  const { data, isLoading, error } = useCategories(1)
+"use client";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import Dashboard from "@/app/(main)/components/dashboard";
 
-if (isLoading) return <p>Đang tải...</p>
-if (error) return <p>Có lỗi xảy ra</p>
+export default function HomePage() {
+  const router = useRouter();
+  const [loading, setLoading] = useState(true);
 
-return (
-  <div>
-    {data?.data.categories.map(cat => (
-      <div key={cat._id}>
-        <h3>{cat.name}</h3>
-        <p>Slug: {cat.slug}</p>
-        <p>Ngày tạo: {cat.createdAt}</p>
+  useEffect(() => {
+    const user = localStorage.getItem("user");
+    if (!user) {
+      router.replace("/auth/login");
+    } else {
+      setLoading(false);
+    }
+  }, [router]);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
       </div>
-    ))}
+    );
+  }
 
-    <p>
-      Trang {data?.data.pagination.currentPage} / {data?.data.pagination.totalPages}
-    </p>
-  </div>
-)
+  return <Dashboard />;
 }

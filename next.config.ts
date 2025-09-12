@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: '/api/:path*', // tất cả request bắt đầu bằng /api
-        destination: 'https://product-54lf.onrender.com/:path*', // proxy sang backend
+        destination: 'https://expense-tracker-abz8.onrender.com/:path*', // proxy sang backend
       },
     ];
   },
