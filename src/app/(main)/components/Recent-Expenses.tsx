@@ -3,10 +3,13 @@ import { Plus, Pencil, Trash2 } from "lucide-react";
 import { useExpenses } from "@/api/endpoints/useItem";
 import { useDeleteExpense } from "@/api/endpoints/useDeleteExpense";
 import { Expense } from "@/api/types/Expense";
+import AddExpensePopup from "@/app/(main)/components/popupadd";
+import EditExpensePopup from "@/app/(main)/components/popupedit";
+import { tr } from "zod/v4/locales";
 export default function RecentExpenses() {
   const [page] = useState(1);
-  const { data, isLoading, isError } = useExpenses(page);
-  console.log("data", data?.data);
+  const [open, setOpen] = useState(false);
+  const { data, isLoading, refetch } = useExpenses(page);
   return (
     <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
       {/* Header */}
@@ -15,6 +18,7 @@ export default function RecentExpenses() {
           Recent Expenses
         </h3>
         <button
+          onClick={() => setOpen(true)}
           className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium 
           ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 
           focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 
@@ -59,17 +63,23 @@ export default function RecentExpenses() {
                     userId={item.userId}
                     createdAt={item.createdAt}
                     updatedAt={item.updatedAt}
+                    refetch={refetch}
                   />
                 ))}
               </tbody>
             </table>
+            {open == true ? (
+              <AddExpensePopup setOpen={setOpen} refetch={refetch} />
+            ) : null}
           </div>
         </div>
       </div>
     </div>
   );
 }
-
+interface ItemcardProps extends Expense {
+  refetch: ()=>void;
+}
 const Itemcard = ({
   _id,
   title,
@@ -78,11 +88,12 @@ const Itemcard = ({
   userId,
   createdAt,
   updatedAt,
-}: Expense) => {
-  console.log('id2',_id)
+  refetch,
+}: ItemcardProps) => {
+    const [openedit, setOpentedit] = useState(false);
   const { mutate: deleteExpense, isPending } = useDeleteExpense();
   const handleDelete = (_id: string) => {
-    console.log("id",_id)
+    console.log("id", _id);
     if (confirm("Bạn có chắc muốn xóa?")) {
       deleteExpense(_id);
     }
@@ -103,6 +114,7 @@ const Itemcard = ({
       <td className="p-4 text-right">
         <div className="flex justify-end space-x-1">
           <button
+            onClick={() => setOpentedit(true)}
             className="inline-flex h-9 items-center justify-center rounded-md px-3 text-sm font-medium 
                         hover:bg-accent hover:text-accent-foreground"
           >
@@ -116,6 +128,9 @@ const Itemcard = ({
           >
             <Trash2 className="h-4 w-4" />
           </button>
+          {openedit == true ? (
+            <EditExpensePopup setOpen={setOpentedit} refetch={refetch} id={_id} />
+          ) : null}
         </div>
       </td>
     </tr>

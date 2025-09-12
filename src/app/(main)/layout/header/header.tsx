@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { DollarSign, User, LogOut, Settings } from "lucide-react";
-import { useGetUser } from '@/api/endpoints/usegetUser';
+import { useGetUser } from "@/api/endpoints/usegetUser";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 
 export default function Header() {
@@ -36,7 +36,9 @@ export default function Header() {
             <div className="bg-primary/10 p-2 rounded-lg">
               <DollarSign className="h-6 w-6 text-primary" />
             </div>
-            <span className="text-xl font-bold text-foreground">Expense Tracker</span>
+            <span className="text-xl font-bold text-foreground">
+              Expense Tracker
+            </span>
           </div>
 
           <div className="hidden md:flex items-center space-x-8">
@@ -52,28 +54,33 @@ export default function Header() {
             <span className="hidden sm:block text-sm text-muted-foreground">
               {data?.data.user.name}
             </span>
-
-            <DropdownMenu.Root>
+            <DropdownMenu.Root modal={false}>
               <DropdownMenu.Trigger className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 rounded-md px-3 relative">
                 <User className="h-4 w-4" />
               </DropdownMenu.Trigger>
 
-              <DropdownMenu.Content className="bg-card rounded-md shadow-lg p-2 w-48">
-                <DropdownMenu.Item
-                  className="flex items-center gap-2 px-2 py-2 rounded-md hover:bg-muted cursor-pointer"
-                  onClick={() => router.push("/profile")}
+              <DropdownMenu.Portal>
+                <DropdownMenu.Content
+                  side="bottom"
+                  align="end"
+                  sideOffset={5}
+                  className="absolute right-0 mt-2 bg-card rounded-md shadow-lg p-2 w-48"
                 >
-                  <Settings className="h-4 w-4" /> Profile Settings
-                </DropdownMenu.Item>
-                <DropdownMenu.Item
-                  className="flex items-center gap-2 px-2 py-2 rounded-md hover:bg-muted cursor-pointer"
-                  onClick={handleSignOut}
-                >
-                  <LogOut className="h-4 w-4" /> Sign Out
-                </DropdownMenu.Item>
-              </DropdownMenu.Content>
+                  <DropdownMenu.Item
+                    className="flex items-center gap-2 px-2 py-2 rounded-md hover:bg-muted cursor-pointer"
+                    onClick={() => router.push("/profile")}
+                  >
+                    <Settings className="h-4 w-4" /> Profile Settings
+                  </DropdownMenu.Item>
+                  <DropdownMenu.Item
+                    className="flex items-center gap-2 px-2 py-2 rounded-md hover:bg-muted cursor-pointer"
+                    onClick={handleSignOut}
+                  >
+                    <LogOut className="h-4 w-4" /> Sign Out
+                  </DropdownMenu.Item>
+                </DropdownMenu.Content>
+              </DropdownMenu.Portal>
             </DropdownMenu.Root>
-
           </div>
         </div>
       </div>

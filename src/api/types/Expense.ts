@@ -21,3 +21,22 @@ export interface ExpenseRespont {
   data: Expense[];
   pagination: Pagination;
 }
+export interface ExpensePayload {
+  title: string
+  amount: number
+  categoryId: string
+}
+export interface Expensedata {
+  data:{
+  _id: string;
+  title: string;
+  amount: number;
+  categoryId: {
+    name:string;
+    _id:string
+  };
+  userId: string;
+  createdAt: string;
+  updatedAt: string;
+}
+}
