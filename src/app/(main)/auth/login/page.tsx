@@ -1,11 +1,25 @@
+'use client'
 import LoginForm from "@/app/(main)/auth/login/components/LoginForm";
 import { DollarSign, TrendingUp } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Card,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 export default function LoginPage() {
+    const router = useRouter();
+   
+     useEffect(() => {
+       const user = localStorage.getItem("user");
+       if (!user) {
+         router.replace("/auth/login");
+       } else {
+          router.push("/auth/login");
+       }
+     }, [router]);
+   
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-muted/30 to-primary/5 p-4">
       <div className="w-full max-w-md space-y-6">
