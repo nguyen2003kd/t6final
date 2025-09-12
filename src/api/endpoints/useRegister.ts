@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import axios ,{ AxiosError }from "axios";
 import {RegisterPayload,RegisterResponse} from '@/api/types/register'
-import { ApiError } from "@/app/(main)/auth/libs/type";
+import { ApiError } from "@/app/auth/libs/type";
 import links from "@/lib/link";
 export function useRegister() {
   return useMutation<RegisterResponse, AxiosError<ApiError>, RegisterPayload>({

@@ -1,15 +1,33 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import { useExpenses } from "@/api/endpoints/useItem";
 import { useDeleteExpense } from "@/api/endpoints/useDeleteExpense";
 import { Expense } from "@/api/types/Expense";
 import AddExpensePopup from "@/app/(main)/components/popupadd";
+import { CircleAlert  } from 'lucide-react'
 import EditExpensePopup from "@/app/(main)/components/popupedit";
-import { tr } from "zod/v4/locales";
+import { useExpenseStore } from "@/stores/list-expenses";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogClose,
+  DialogFooter,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 export default function RecentExpenses() {
-  const [page] = useState(1);
-  const [open, setOpen] = useState(false);
-  const { data, isLoading, refetch } = useExpenses(page);
+const { setExpenses } = useExpenseStore();
+const [page] = useState(1);
+const [open, setOpen] = useState(false);
+const { data, isLoading, refetch } = useExpenses(page);
+
+useEffect(() => {
+  if (data) {
+    setExpenses(data.data);
+  }
+}, [data, setExpenses]);
   return (
     <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
       {/* Header */}
@@ -78,7 +96,7 @@ export default function RecentExpenses() {
   );
 }
 interface ItemcardProps extends Expense {
-  refetch: ()=>void;
+  refetch: () => void;
 }
 const Itemcard = ({
   _id,
@@ -90,13 +108,11 @@ const Itemcard = ({
   updatedAt,
   refetch,
 }: ItemcardProps) => {
-    const [openedit, setOpentedit] = useState(false);
+  const [openedit, setOpentedit] = useState(false);
+  const [opendelete, setOpendelete] = useState(false);
   const { mutate: deleteExpense, isPending } = useDeleteExpense();
   const handleDelete = (_id: string) => {
-    console.log("id", _id);
-    if (confirm("Bạn có chắc muốn xóa?")) {
       deleteExpense(_id);
-    }
   };
   return (
     <tr className="border-b transition-colors hover:bg-muted/50">
@@ -122,17 +138,70 @@ const Itemcard = ({
           </button>
           <button
             disabled={isPending}
-            onClick={() => handleDelete(_id)}
+            onClick={() => setOpendelete(true)}
             className="inline-flex h-9 items-center justify-center rounded-md px-3 text-sm font-medium 
                         hover:bg-accent hover:text-accent-foreground"
           >
             <Trash2 className="h-4 w-4" />
           </button>
           {openedit == true ? (
-            <EditExpensePopup setOpen={setOpentedit} refetch={refetch} id={_id} />
+            <EditExpensePopup
+              setOpen={setOpentedit}
+              refetch={refetch}
+              id={_id}
+            />
           ) : null}
+          <Warning_message
+            handleDelete={handleDelete}
+            id={_id}
+            setOpendelete={setOpendelete}
+            opendelete={opendelete}
+          />
         </div>
       </td>
     </tr>
+  );
+};
+interface Warning {
+  handleDelete: (id: string) => void;
+  id: string;
+  setOpendelete: React.Dispatch<React.SetStateAction<boolean>>;
+  opendelete: boolean;
+}
+const Warning_message = ({
+  handleDelete,
+  id,
+  setOpendelete,
+  opendelete,
+}: Warning) => {
+  return (
+    <div className="">
+<Dialog open={opendelete} onOpenChange={setOpendelete} modal={false}>
+  <DialogContent className="sm:max-w-md sm:rounded-xl sm:[&>button.absolute.top-4.right-4]:hidden">
+    <DialogHeader>
+      <DialogTitle>Xác nhận</DialogTitle>
+    </DialogHeader>
+    <DialogDescription className="flex flex-rows justify-center items-center gap-2 text-center">
+      <CircleAlert className="text-red-700" />
+      Bạn có muốn chắc chắn xóa
+    </DialogDescription>
+    <DialogFooter className="flex justify-end gap-2 pt-4">
+      <DialogClose asChild>
+        <Button variant="outline">Đóng</Button>
+      </DialogClose>
+      <DialogClose asChild>
+        <Button
+          variant="destructive"
+          type="submit"
+          onClick={() => handleDelete(id)}
+        >
+          Xóa
+        </Button>
+      </DialogClose>
+    </DialogFooter>
+  </DialogContent>
+</Dialog>
+
+    </div>
   );
 };

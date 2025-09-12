@@ -15,6 +15,14 @@ export type VerifyOtpPayload = {
   email: string;
   otp: string;
 };
+export interface ResendOtpPayload {
+  email: string;
+}
+
+export interface ResendOtpResponse {
+  success: boolean;
+  message: string;
+}
 
 export type VerifyOtpResponse = {
   success: boolean;

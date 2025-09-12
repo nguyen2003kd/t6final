@@ -53,7 +53,7 @@ useEffect(() => {
   if (expense && expense.data !== undefined) {
     reset({
       amount: expense.data.amount ?? 0,
-      category: typeof expense.data.categoryId._id,
+      category: expense.data.categoryId._id,
       date: expense.data.updatedAt
         ? new Date(expense.data.updatedAt).toISOString().split("T")[0]
         : new Date().toISOString().split("T")[0],

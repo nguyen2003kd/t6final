@@ -7,6 +7,7 @@ import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 
 export default function Header() {
   const router = useRouter();
+  const [checking, setChecking] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const { data, isLoading, error } = useGetUser();
 
@@ -14,14 +15,14 @@ export default function Header() {
     const user = localStorage.getItem("user");
     if (!user) {
       router.replace("/auth/login");
-      setIsAuthenticated(false);
     } else {
       setIsAuthenticated(true);
     }
+    setChecking(false);
   }, [router]);
 
-  if (isAuthenticated === null) return null;
-  if (!isAuthenticated) return null;
+  if (checking) return null;
+  if (!isAuthenticated) return null; // không có token → không render
 
   const handleSignOut = () => {
     localStorage.removeItem("user");

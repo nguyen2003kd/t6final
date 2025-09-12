@@ -26,25 +26,25 @@ export default function LoginForm() {
     formState: { errors },
   } = useForm<LoginSchema>({ resolver: zodResolver(loginSchema) });
 
-const onLogin = (data: LoginSchema) => {
-  mutate(
-    { email: data.email, password: data.password },
-    {
-      onSuccess: (res) => {
-        localStorage.setItem(
-          "user",
-          JSON.stringify({
-            token: res.data.token,
-          })
-        );
+  const onLogin = (data: LoginSchema) => {
+    mutate(
+      { email: data.email, password: data.password },
+      {
+        onSuccess: (res) => {
+          localStorage.setItem(
+            "user",
+            JSON.stringify({
+              token: res.data.token,
+            })
+          );
 
-        toast.success("Đăng nhập thành công!");
-        router.push("/");
-      },
-      onError: () => toast.error("Tài khoản hoặc mật khẩu không đúng"),
-    }
-  );
-};
+          toast.success("Đăng nhập thành công!");
+          router.push("/");
+        },
+        onError: () => toast.error("Tài khoản hoặc mật khẩu không đúng"),
+      }
+    );
+  };
 
   return (
     <form onSubmit={handleSubmit(onLogin)} className="space-y-4">
@@ -63,7 +63,10 @@ const onLogin = (data: LoginSchema) => {
       <Button type="submit" className="w-full" disabled={isPending}>
         {isPending ? "Đang đăng nhập..." : "Đăng nhập"}
       </Button>
-      <Link className="text-sm" href="/auth/registerForm"> Dont have an account? Sign up</Link>
+      <Link className="text-sm" href="/auth/registerForm">
+        {" "}
+        Dont have an account? Sign up
+      </Link>
       <Toaster richColors />
     </form>
   );

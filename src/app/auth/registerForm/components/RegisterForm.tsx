@@ -8,13 +8,14 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { useRegister } from "@/api/endpoints/useRegister";
-import { OtpForm } from "@/app/(main)/auth/components/OtpForm";
-
+import { OtpForm } from "@/app/auth/components/OtpForm";
+import { useRouter } from "next/navigation";
 // schema đăng ký
 const registerSchema = z.object({
   name: z.string().min(3, "Tên phải có ít nhất 3 ký tự"),
   email: z.string().email("Email không hợp lệ"),
   password: z.string().min(6, "Mật khẩu phải có ít nhất 6 ký tự"),
+  confirm:z.string().min(6, "Mật khẩu phải có ít nhất 6 ký tự")
 });
 
 type RegisterSchema = z.infer<typeof registerSchema>;
@@ -23,7 +24,7 @@ export const RegisterForm = () => {
   const registerMutation = useRegister();
   const [step, setStep] = useState<"form" | "otp">("form");
   const [email, setEmail] = useState("");
-
+ const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -31,6 +32,11 @@ export const RegisterForm = () => {
   } = useForm<RegisterSchema>({ resolver: zodResolver(registerSchema) });
 
   const onRegister = (data: RegisterSchema) => {
+    if(data.confirm!=data.password)
+    {
+      toast.error("mật khẩu không khớp !")
+      return
+    }
     registerMutation.mutate(
       { name: data.name, email: data.email, password: data.password, role: "user" },
       {
@@ -48,7 +54,10 @@ export const RegisterForm = () => {
   };
 
   if (step === "otp") {
-    return <OtpForm email={email} onSuccess={() => toast.success("Tài khoản đã được xác thực!")} />;
+    return <OtpForm email={email}  Success={() => {
+      toast.success("Tài khoản đã được xác thực!")
+      router.push('/')
+    }} />;
   }
 
   return (
@@ -70,7 +79,13 @@ export const RegisterForm = () => {
         <Input type="password" placeholder="Nhập mật khẩu" {...register("password")} />
         {errors.password && <p className="text-sm text-red-500">{errors.password.message}</p>}
       </div>
-
+      <div className="space-y-2">
+        <Label>Xác nhận Mật khẩu</Label>
+        <Input placeholder="Xác nhận Mật khẩu" type="password" {...register("confirm")} />
+        {errors.confirm && (
+          <p className="text-red-500">{errors.confirm.message}</p>
+        )}
+      </div>
       <Button type="submit" className="w-full" disabled={registerMutation.isPending}>
         {registerMutation.isPending ? "Đang đăng ký..." : "Đăng ký"}
       </Button>
