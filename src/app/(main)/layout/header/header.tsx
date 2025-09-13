@@ -1,24 +1,29 @@
 "use client";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { DollarSign, User, LogOut, Settings } from "lucide-react";
 import { useGetUser } from "@/api/endpoints/usegetUser";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 
 export default function Header() {
   const router = useRouter();
-
-  const { data, isLoading, error } = useGetUser();
+  const pathname = usePathname();
+  const { data } = useGetUser();
 
   const handleSignOut = () => {
     localStorage.removeItem("user");
     router.push("/auth/login");
   };
 
+  const navItems = [
+    { label: "Dashboard", href: "/" },
+    { label: "Profile", href: "/profile-setting" },
+  ];
+
   return (
     <nav className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
+          {/* Logo */}
           <div className="flex items-center space-x-2">
             <div className="bg-primary/10 p-2 rounded-lg">
               <DollarSign className="h-6 w-6 text-primary" />
@@ -28,15 +33,27 @@ export default function Header() {
             </span>
           </div>
 
+          {/* Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            <button className="text-sm font-medium transition-colors hover:text-primary text-primary border-b-2 border-primary">
-              Dashboard
-            </button>
-            <button className="text-sm font-medium transition-colors hover:text-primary text-muted-foreground">
-              Profile
-            </button>
+            {navItems.map((item) => {
+              const isActive = pathname === item.href;
+              return (
+                <button
+                  key={item.href}
+                  onClick={() => router.push(item.href)}
+                  className={`text-sm font-medium transition-colors ${
+                    isActive
+                      ? "text-primary border-b-2 border-primary"
+                      : "text-muted-foreground hover:text-primary"
+                  }`}
+                >
+                  {item.label}
+                </button>
+              );
+            })}
           </div>
 
+          {/* User Dropdown */}
           <div className="flex items-center space-x-4">
             <span className="hidden sm:block text-sm text-muted-foreground">
               {data?.data.user.name}
@@ -55,7 +72,7 @@ export default function Header() {
                 >
                   <DropdownMenu.Item
                     className="flex items-center gap-2 px-2 py-2 rounded-md hover:bg-muted cursor-pointer"
-                    onClick={() => router.push("/profile")}
+                    onClick={() => router.push("/profile-setting")}
                   >
                     <Settings className="h-4 w-4" /> Profile Settings
                   </DropdownMenu.Item>

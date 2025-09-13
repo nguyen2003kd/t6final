@@ -16,13 +16,12 @@ export default function Dashboard() {
   const [count, setCount] = useState(0);
   const [Average, setAverage] = useState(0);
   const { data, isLoading, error } = useGetUser();
-  console.log("expenses",expenses)
   useEffect(() => {
     if (expenses) {
       setTotalMonth(totalThisMonth(expenses));
       setTotalAll(total(expenses));
       setCount(expenses.length);
-      setAverage(total(expenses) / expenses.length||0);
+      setAverage(total(expenses) / expenses.length || 0);
     }
   }, [expenses]);
   return (
@@ -34,24 +33,28 @@ export default function Dashboard() {
           description="Current month expenses"
           value={totalMonth}
           icon={Calendar}
+          color="#22c55e"
         />
         <ThisMonthCard
           title={"Total Expenses"}
           description="All time total"
           value={totalall}
           icon={CircleDollarSign}
+          color="#ef4444"
         />
         <ThisMonthCard
           title={"Transactions"}
           description="Current month expenses"
           value={count}
           icon={TrendingUp}
+          color="#3b82f6"
         />
         <ThisMonthCard
           title={"Average"}
           description="Per transaction"
           value={Average}
           icon={TrendingDown}
+          color="#eab308"
         />
       </div>
       <div className="mb-5">

@@ -13,7 +13,7 @@ export default function AuthGuard({ children }: AuthGuardProps) {
   const [checking, setChecking] = useState(true)
 
   useEffect(() => {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('user')
 
     if (!token) {
       toast.error('Vui lòng đăng nhập trước!')

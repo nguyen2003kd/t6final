@@ -14,8 +14,6 @@ export function Providers({ children }: ProvidersProps) {
     const user = localStorage.getItem("user");
     if (!user) {
       router.replace("/auth/login");
-    } else {
-      router.push("/");
     }
   }, [router]);
 
