@@ -6,7 +6,7 @@ import * as z from "zod";
 import { useCategory } from "@/api/endpoints/usegerCategory";
 import { useState } from "react";
 import { useAddExpense } from "@/api/endpoints/useaddExpense";
-
+import { toast } from "sonner";
 interface AddExpensePopupProps {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   refetch:()=>void
@@ -58,8 +58,10 @@ export default function AddExpensePopup({ setOpen,refetch }: AddExpensePopupProp
           reset();
           setOpen(false);
           refetch()
+          toast.success("Thêm Chi tiêu thành công")
         },
         onError: (error) => {
+          toast.error(error.message)
           console.error("Thêm chi tiêu thất bại:", error.message);
         },
       }

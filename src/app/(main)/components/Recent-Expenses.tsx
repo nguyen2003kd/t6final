@@ -4,8 +4,9 @@ import { useExpenses } from "@/api/endpoints/useItem";
 import { useDeleteExpense } from "@/api/endpoints/useDeleteExpense";
 import { Expense } from "@/api/types/Expense";
 import AddExpensePopup from "@/app/(main)/components/popupadd";
-import { CircleAlert  } from 'lucide-react'
+import { CircleAlert } from "lucide-react";
 import EditExpensePopup from "@/app/(main)/components/popupedit";
+import { toast } from "sonner";
 import { useExpenseStore } from "@/stores/list-expenses";
 import {
   Dialog,
@@ -18,16 +19,16 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 export default function RecentExpenses() {
-const { setExpenses } = useExpenseStore();
-const [page] = useState(1);
-const [open, setOpen] = useState(false);
-const { data, isLoading, refetch } = useExpenses(page);
+  const { setExpenses } = useExpenseStore();
+  const [page] = useState(1);
+  const [open, setOpen] = useState(false);
+  const { data, isLoading, refetch } = useExpenses(page);
 
-useEffect(() => {
-  if (data) {
-    setExpenses(data.data);
-  }
-}, [data, setExpenses]);
+  useEffect(() => {
+    if (data) {
+      setExpenses(data.data);
+    }
+  }, [data, setExpenses]);
   return (
     <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
       {/* Header */}
@@ -112,7 +113,14 @@ const Itemcard = ({
   const [opendelete, setOpendelete] = useState(false);
   const { mutate: deleteExpense, isPending } = useDeleteExpense();
   const handleDelete = (_id: string) => {
-      deleteExpense(_id);
+    deleteExpense(_id, {
+      onSuccess: () => {
+        toast.success("Xóa thành công");
+      },
+      onError:(error)=>{
+        toast.error(error.message)
+      }
+    });
   };
   return (
     <tr className="border-b transition-colors hover:bg-muted/50">
@@ -176,32 +184,31 @@ const Warning_message = ({
 }: Warning) => {
   return (
     <div className="">
-<Dialog open={opendelete} onOpenChange={setOpendelete} modal={false}>
-  <DialogContent className="sm:max-w-md sm:rounded-xl sm:[&>button.absolute.top-4.right-4]:hidden">
-    <DialogHeader>
-      <DialogTitle>Xác nhận</DialogTitle>
-    </DialogHeader>
-    <DialogDescription className="flex flex-rows justify-center items-center gap-2 text-center">
-      <CircleAlert className="text-red-700" />
-      Bạn có muốn chắc chắn xóa
-    </DialogDescription>
-    <DialogFooter className="flex justify-end gap-2 pt-4">
-      <DialogClose asChild>
-        <Button variant="outline">Đóng</Button>
-      </DialogClose>
-      <DialogClose asChild>
-        <Button
-          variant="destructive"
-          type="submit"
-          onClick={() => handleDelete(id)}
-        >
-          Xóa
-        </Button>
-      </DialogClose>
-    </DialogFooter>
-  </DialogContent>
-</Dialog>
-
+      <Dialog open={opendelete} onOpenChange={setOpendelete} modal={false}>
+        <DialogContent className="sm:max-w-md sm:rounded-xl sm:[&>button.absolute.top-4.right-4]:hidden">
+          <DialogHeader>
+            <DialogTitle>Xác nhận</DialogTitle>
+          </DialogHeader>
+          <DialogDescription className="flex flex-rows justify-center items-center gap-2 text-center">
+            <CircleAlert className="text-red-700" />
+            Bạn có muốn chắc chắn xóa
+          </DialogDescription>
+          <DialogFooter className="flex justify-end gap-2 pt-4">
+            <DialogClose asChild>
+              <Button variant="outline">Đóng</Button>
+            </DialogClose>
+            <DialogClose asChild>
+              <Button
+                variant="destructive"
+                type="submit"
+                onClick={() => handleDelete(id)}
+              >
+                Xóa
+              </Button>
+            </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
