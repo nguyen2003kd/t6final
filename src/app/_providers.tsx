@@ -9,14 +9,6 @@ interface ProvidersProps {
 }
 
 export function Providers({ children }: ProvidersProps) {
-  const router = useRouter();
-  useEffect(() => {
-    const user = localStorage.getItem("user");
-    if (!user) {
-      router.replace("/auth/login");
-    }
-  }, [router]);
-
   const [queryClient] = useState(
     () =>
       new QueryClient({
