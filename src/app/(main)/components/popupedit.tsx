@@ -7,6 +7,7 @@ import { useCategory } from "@/api/endpoints/usegerCategory";
 import { useState, useEffect } from "react";
 import { useUpdateExpense } from "@/api/endpoints/useUpdateExpense";
 import { useGetExpenseById } from "@/api/endpoints/useGetExpenseById";
+import { toast } from "sonner";
 interface EditExpensePopupProps {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   refetch: () => void;
@@ -74,10 +75,12 @@ useEffect(() => {
         onSuccess: () => {
           reset();
           setOpen(false);
+          toast.success("Cập nhật thành công")
           refetch();
         },
         onError: (error) => {
           console.error("Update thất bại:", error.message);
+          toast.error(error.message)
         },
       }
     );
